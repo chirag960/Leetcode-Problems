@@ -3,26 +3,26 @@ class Solution {
         if(nums.length == 1){
             return nums[0];
         }
+        if(nums.length == 2){
+            return Math.max(nums[0], nums[1]);
+        }
+        int[] dp = new int[nums.length];
+        for(int i=0;i<dp.length;i++){
+            dp[i] = -1;
+        }
         
-        HashMap<Integer, Integer> memo = new HashMap<>();
-        
-        memo.put(0,nums[0]);
-        
-        memo.put(1,Math.max(nums[0],nums[1]));
-        int ans = dp(nums.length-1, nums,memo);
-        return ans;
+        dp[dp.length-1] = nums[nums.length-1];
+        dp[dp.length-2] = Math.max(nums[nums.length-2],nums[nums.length-1]);
+        cache(nums, 0, dp);
+        return Math.max(dp[0], dp[1]);
         
     }
     
-    public static int dp(int i, int[] nums, HashMap<Integer, Integer> memo){
-        if(i<2){
-            return memo.get(i);
+    public int cache(int nums[], int n, int[] dp){
+        if(dp[n] == -1){
+            dp[n] = Math.max(nums[n] + cache(nums, n+2, dp), cache(nums, n+1, dp));
         }
-        if(!memo.containsKey(i)){
-            memo.put(i, Math.max(dp(i-1,nums,memo),dp(i-2,nums,memo)+nums[i]));    
-        }
-        
-        return memo.get(i);
+        return dp[n];
     }
     
 }
